@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>A* Heuristic Search</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-dark bg-dark" style="height: 8vh"> <a class="navbar-brand" href="#">
+            <h2>Path Finding using Multi Heuristic A* Algorithm<br></h2>
+        </a></nav>
+
+    <div class="container-fluid row" style="height: 92vh">
+
+        <div class="col-xl-4">
+            <br>
+            <div class="row border-bottom">
+                <div class="col-sm-9">
+                    <h4>Instructions</h4>
+                    This is a program to find the shortest path between two positions in a 2-dimensional grid with
+                    obstacles.
+                    To
+                    use it:
+                    <ul>
+                        <li>Enter start and goal locations.</li>
+                        <li>Click on a grid element to block/unblock it.</li>
+                        <li>Select the heuristic functions and their weights.</li>
+                        <li>Press "Find Path" to see results.</li>
+                    </ul>
+                </div>
+                <div class="col-sm-3">
+                    <h4>Legend</h4>
+                    <div>
+                        <div class="border"
+                            style="display: inline-block;width: 15px; height: 15px;background-color: #FCFFF5"></div>
+                        <small>Unblocked Nodes</small><br>
+                        <div class="border"
+                            style="display: inline-block;width: 15px; height: 15px;background-color: #193441"></div>
+                        <small>Blocked Nodes</small><br>
+                        <div class="border"
+                            style="display: inline-block;width: 15px; height: 15px;background-color: #3E606F"></div>
+                        <small>Terminal Nodes</small><br>
+                        <div class="border"
+                            style="display: inline-block;width: 15px; height: 15px;background-color: #91AA9D"></div>
+                        <small>Path</small><br>
+                        <div class="border"
+                            style="display: inline-block;width: 15px; height: 15px;background-color: #D1DBBD"></div>
+                        <small>Explored Nodes</small>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="padding-top: 20px">
+                <div class="col-sm">
+                    Enter start position <br>
+                    <input id="startinp" type="number" placeholder="ex - 0" style="width: 150px">
+                    <button id="startbut">Enter</button><br><br>
+                </div>
+                <div class="col-sm">
+                    Enter goal position <br>
+                    <input id="endinp" type="number" placeholder="ex - 224" style="width: 150px">
+                    <button id="endbut">Enter</button><br><br>
+                </div>
+            </div>
+            <h6>Select Heuristic Functions</h6>
+            <table class="table">
+                <tr>
+                    <td>Manhattan Distance</td>
+                    <td class="range-slider">
+                        <input id="h1" class="range-slider__range" type="range" value="0" min="0" max="100">
+                        <div class="range-slider__value">0</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Euclidean Distance</td>
+                    <td class="range-slider">
+                        <input id="h2" class="range-slider__range" type="range" value="0" min="0" max="100">
+                        <div class="range-slider__value">0</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Horizontal Distance</td>
+                    <td class="range-slider">
+                        <input id="h3" class="range-slider__range" type="range" value="0" min="0" max="100">
+                        <div class="range-slider__value">0</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Vertical Distance</td>
+                    <td class="range-slider">
+                        <input id="h4" class="range-slider__range" type="range" value="0" min="0" max="100">
+                        <div class="range-slider__value">0</div>
+                    </td>
+                </tr>
+
+            </table>
+            <button id="reset">Reset</button>
+            <button id="find">Find Path</button><br><br>
+            <div id="result">
+            </div>
+
+
+        </div>
+
+
+        <div class="grid-container col-xl-8">
+            <div id="x0" class="grid-item">0</div>
+            <div id="x1" class="grid-item">1</div>
+            <div id="x2" class="grid-item">2</div>
+            <div id="x3" class="grid-item">3</div>
+            <div id="x4" class="grid-item">4</div>
+            <div id="x5" class="grid-item">5</div>
+            <div id="x6" class="grid-item">6</div>
+            <div id="x7" class="grid-item">7</div>
+            <div id="x8" class="grid-item">8</div>
+            <div id="x9" class="grid-item">9</div>
+            <div id="x10" class="grid-item">10</div>
+            <div id="x11" class="grid-item">11</div>
+            <div id="x12" class="grid-item">12</div>
+            <div id="x13" class="grid-item">13</div>
+            <div id="x14" class="grid-item">14</div>
+            <div id="x15" class="grid-item">15</div>
+            <div id="x16" class="grid-item">16</div>
+            <div id="x17" class="grid-item">17</div>
+            <div id="x18" class="grid-item">18</div>
+            <div id="x19" class="grid-item">19</div>
+            <div id="x20" class="grid-item">20</div>
+            <div id="x21" class="grid-item">21</div>
+            <div id="x22" class="grid-item">22</div>
+            <div id="x23" class="grid-item">23</div>
+            <div id="x24" class="grid-item">24</div>
+            <div id="x25" class="grid-item">25</div>
+            <div id="x26" class="grid-item">26</div>
+            <div id="x27" class="grid-item">27</div>
+            <div id="x28" class="grid-item">28</div>
+            <div id="x29" class="grid-item">29</div>
+            <div id="x30" class="grid-item">30</div>
+            <div id="x31" class="grid-item">31</div>
+            <div id="x32" class="grid-item">32</div>
+            <div id="x33" class="grid-item">33</div>
+            <div id="x34" class="grid-item">34</div>
+            <div id="x35" class="grid-item">35</div>
+            <div id="x36" class="grid-item">36</div>
+            <div id="x37" class="grid-item">37</div>
+            <div id="x38" class="grid-item">38</div>
+            <div id="x39" class="grid-item">39</div>
+            <div id="x40" class="grid-item">40</div>
+            <div id="x41" class="grid-item">41</div>
+            <div id="x42" class="grid-item">42</div>
+            <div id="x43" class="grid-item">43</div>
+            <div id="x44" class="grid-item">44</div>
+            <div id="x45" class="grid-item">45</div>
+            <div id="x46" class="grid-item">46</div>
+            <div id="x47" class="grid-item">47</div>
+            <div id="x48" class="grid-item">48</div>
+            <div id="x49" class="grid-item">49</div>
+            <div id="x50" class="grid-item">50</div>
+            <div id="x51" class="grid-item">51</div>
+            <div id="x52" class="grid-item">52</div>
+            <div id="x53" class="grid-item">53</div>
+            <div id="x54" class="grid-item">54</div>
+            <div id="x55" class="grid-item">55</div>
+            <div id="x56" class="grid-item">56</div>
+            <div id="x57" class="grid-item">57</div>
+            <div id="x58" class="grid-item">58</div>
+            <div id="x59" class="grid-item">59</div>
+            <div id="x60" class="grid-item">60</div>
+            <div id="x61" class="grid-item">61</div>
+            <div id="x62" class="grid-item">62</div>
+            <div id="x63" class="grid-item">63</div>
+            <div id="x64" class="grid-item">64</div>
+            <div id="x65" class="grid-item">65</div>
+            <div id="x66" class="grid-item">66</div>
+            <div id="x67" class="grid-item">67</div>
+            <div id="x68" class="grid-item">68</div>
+            <div id="x69" class="grid-item">69</div>
+            <div id="x70" class="grid-item">70</div>
+            <div id="x71" class="grid-item">71</div>
+            <div id="x72" class="grid-item">72</div>
+            <div id="x73" class="grid-item">73</div>
+            <div id="x74" class="grid-item">74</div>
+            <div id="x75" class="grid-item">75</div>
+            <div id="x76" class="grid-item">76</div>
+            <div id="x77" class="grid-item">77</div>
+            <div id="x78" class="grid-item">78</div>
+            <div id="x79" class="grid-item">79</div>
+            <div id="x80" class="grid-item">80</div>
+            <div id="x81" class="grid-item">81</div>
+            <div id="x82" class="grid-item">82</div>
+            <div id="x83" class="grid-item">83</div>
+            <div id="x84" class="grid-item">84</div>
+            <div id="x85" class="grid-item">85</div>
+            <div id="x86" class="grid-item">86</div>
+            <div id="x87" class="grid-item">87</div>
+            <div id="x88" class="grid-item">88</div>
+            <div id="x89" class="grid-item">89</div>
+            <div id="x90" class="grid-item">90</div>
+            <div id="x91" class="grid-item">91</div>
+            <div id="x92" class="grid-item">92</div>
+            <div id="x93" class="grid-item">93</div>
+            <div id="x94" class="grid-item">94</div>
+            <div id="x95" class="grid-item">95</div>
+            <div id="x96" class="grid-item">96</div>
+            <div id="x97" class="grid-item">97</div>
+            <div id="x98" class="grid-item">98</div>
+            <div id="x99" class="grid-item">99</div>
+            <div id="x100" class="grid-item">100</div>
+            <div id="x101" class="grid-item">101</div>
+            <div id="x102" class="grid-item">102</div>
+            <div id="x103" class="grid-item">103</div>
+            <div id="x104" class="grid-item">104</div>
+            <div id="x105" class="grid-item">105</div>
+            <div id="x106" class="grid-item">106</div>
+            <div id="x107" class="grid-item">107</div>
+            <div id="x108" class="grid-item">108</div>
+            <div id="x109" class="grid-item">109</div>
+            <div id="x110" class="grid-item">110</div>
+            <div id="x111" class="grid-item">111</div>
+            <div id="x112" class="grid-item">112</div>
+            <div id="x113" class="grid-item">113</div>
+            <div id="x114" class="grid-item">114</div>
+            <div id="x115" class="grid-item">115</div>
+            <div id="x116" class="grid-item">116</div>
+            <div id="x117" class="grid-item">117</div>
+            <div id="x118" class="grid-item">118</div>
+            <div id="x119" class="grid-item">119</div>
+            <div id="x120" class="grid-item">120</div>
+            <div id="x121" class="grid-item">121</div>
+            <div id="x122" class="grid-item">122</div>
+            <div id="x123" class="grid-item">123</div>
+            <div id="x124" class="grid-item">124</div>
+            <div id="x125" class="grid-item">125</div>
+            <div id="x126" class="grid-item">126</div>
+            <div id="x127" class="grid-item">127</div>
+            <div id="x128" class="grid-item">128</div>
+            <div id="x129" class="grid-item">129</div>
+            <div id="x130" class="grid-item">130</div>
+            <div id="x131" class="grid-item">131</div>
+            <div id="x132" class="grid-item">132</div>
+            <div id="x133" class="grid-item">133</div>
+            <div id="x134" class="grid-item">134</div>
+            <div id="x135" class="grid-item">135</div>
+            <div id="x136" class="grid-item">136</div>
+            <div id="x137" class="grid-item">137</div>
+            <div id="x138" class="grid-item">138</div>
+            <div id="x139" class="grid-item">139</div>
+            <div id="x140" class="grid-item">140</div>
+            <div id="x141" class="grid-item">141</div>
+            <div id="x142" class="grid-item">142</div>
+            <div id="x143" class="grid-item">143</div>
+            <div id="x144" class="grid-item">144</div>
+            <div id="x145" class="grid-item">145</div>
+            <div id="x146" class="grid-item">146</div>
+            <div id="x147" class="grid-item">147</div>
+            <div id="x148" class="grid-item">148</div>
+            <div id="x149" class="grid-item">149</div>
+            <div id="x150" class="grid-item">150</div>
+            <div id="x151" class="grid-item">151</div>
+            <div id="x152" class="grid-item">152</div>
+            <div id="x153" class="grid-item">153</div>
+            <div id="x154" class="grid-item">154</div>
+            <div id="x155" class="grid-item">155</div>
+            <div id="x156" class="grid-item">156</div>
+            <div id="x157" class="grid-item">157</div>
+            <div id="x158" class="grid-item">158</div>
+            <div id="x159" class="grid-item">159</div>
+            <div id="x160" class="grid-item">160</div>
+            <div id="x161" class="grid-item">161</div>
+            <div id="x162" class="grid-item">162</div>
+            <div id="x163" class="grid-item">163</div>
+            <div id="x164" class="grid-item">164</div>
+            <div id="x165" class="grid-item">165</div>
+            <div id="x166" class="grid-item">166</div>
+            <div id="x167" class="grid-item">167</div>
+            <div id="x168" class="grid-item">168</div>
+            <div id="x169" class="grid-item">169</div>
+            <div id="x170" class="grid-item">170</div>
+            <div id="x171" class="grid-item">171</div>
+            <div id="x172" class="grid-item">172</div>
+            <div id="x173" class="grid-item">173</div>
+            <div id="x174" class="grid-item">174</div>
+            <div id="x175" class="grid-item">175</div>
+            <div id="x176" class="grid-item">176</div>
+            <div id="x177" class="grid-item">177</div>
+            <div id="x178" class="grid-item">178</div>
+            <div id="x179" class="grid-item">179</div>
+            <div id="x180" class="grid-item">180</div>
+            <div id="x181" class="grid-item">181</div>
+            <div id="x182" class="grid-item">182</div>
+            <div id="x183" class="grid-item">183</div>
+            <div id="x184" class="grid-item">184</div>
+            <div id="x185" class="grid-item">185</div>
+            <div id="x186" class="grid-item">186</div>
+            <div id="x187" class="grid-item">187</div>
+            <div id="x188" class="grid-item">188</div>
+            <div id="x189" class="grid-item">189</div>
+            <div id="x190" class="grid-item">190</div>
+            <div id="x191" class="grid-item">191</div>
+            <div id="x192" class="grid-item">192</div>
+            <div id="x193" class="grid-item">193</div>
+            <div id="x194" class="grid-item">194</div>
+            <div id="x195" class="grid-item">195</div>
+            <div id="x196" class="grid-item">196</div>
+            <div id="x197" class="grid-item">197</div>
+            <div id="x198" class="grid-item">198</div>
+            <div id="x199" class="grid-item">199</div>
+            <div id="x200" class="grid-item">200</div>
+            <div id="x201" class="grid-item">201</div>
+            <div id="x202" class="grid-item">202</div>
+            <div id="x203" class="grid-item">203</div>
+            <div id="x204" class="grid-item">204</div>
+            <div id="x205" class="grid-item">205</div>
+            <div id="x206" class="grid-item">206</div>
+            <div id="x207" class="grid-item">207</div>
+            <div id="x208" class="grid-item">208</div>
+            <div id="x209" class="grid-item">209</div>
+            <div id="x210" class="grid-item">210</div>
+            <div id="x211" class="grid-item">211</div>
+            <div id="x212" class="grid-item">212</div>
+            <div id="x213" class="grid-item">213</div>
+            <div id="x214" class="grid-item">214</div>
+            <div id="x215" class="grid-item">215</div>
+            <div id="x216" class="grid-item">216</div>
+            <div id="x217" class="grid-item">217</div>
+            <div id="x218" class="grid-item">218</div>
+            <div id="x219" class="grid-item">219</div>
+            <div id="x220" class="grid-item">220</div>
+            <div id="x221" class="grid-item">221</div>
+            <div id="x222" class="grid-item">222</div>
+            <div id="x223" class="grid-item">223</div>
+            <div id="x224" class="grid-item">224</div>
+
+        </div>
+    </div>
+</body>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+
+<script src="main.js"></script>
+
+</html>
